@@ -20,7 +20,7 @@ class Service: IModel {
     var pixelBay: PixabayJson?
 
     func pixelLoadJson() {
-        let url = URL(string: "https://pixabay.com/api/?key=12169393-c73621fb8fde92ee029635ac1&q=&image_type=photo&pretty=true&page=1&per_page=200")
+        let url = URL(string: "https://pixabay.com/api/?key=12169393-c73621fb8fde92ee029635ac1&q=&image_type=photo&pretty=true&page=1&per_page=18")
 
         DispatchQueue.global().async {
             URLSession.shared.dataTask(with: url!) { (data, response, error) in

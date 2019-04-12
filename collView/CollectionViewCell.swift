@@ -15,9 +15,9 @@ class CollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        image.bounds.size  = CGSize(width: 90, height: 90)
+        //image.bounds.size  = CGSize(width: 96, height: 96)
         image.clipsToBounds = true
-        image.layer.cornerRadius = 15//image.frame.height / 2
+        image.layer.cornerRadius = 3//image.frame.height / 2
         
         
     }
