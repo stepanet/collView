@@ -30,40 +30,25 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
         return per_page
     }()
     
-    private var search: String  = { //кол-во фото на странице
+    private var search: String  = { //поиск по картинкам
         var searchText = ""
         return searchText
     }()
     
     
     lazy var searchBar: UISearchBar = {
-        
         let searchBar = UISearchBar()
         searchBar.placeholder = "введите текст"
         searchBar.enablesReturnKeyAutomatically = true
         searchBar.keyboardType = .asciiCapableNumberPad
         searchBar.delegate = self
         return searchBar
-        
     } ()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.navigationItem.titleView = searchBar
-        //searchBar.delegate = self
-        
-        //searchBar.returnKeyType = UIReturnKeyType.done
-        //let textFieldInsideSearchBar = searchBar.value(forKey: "searchField") as? UITextField
-       
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Register cell classes
-        //self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
-        // Do any additional setup after loading the view.
         
     }
     
@@ -72,27 +57,19 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        print(searchText, "search")
         let searchText = searchText.replacingOccurrences(of: " ", with: "+", options: .literal, range: nil)
         search = searchText
         imageInfoArray.removeAll()
         pixelLoadJson(page: page, per_page: per_page, search: search)
     }
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        print(#function)
-    }
-    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
 
-    
     func pixelLoadJson(page: Int, per_page: Int, search: String) {
         
         activityIndicator.startAnimating()
-        
         let url = URL(string: "https://pixabay.com/api/?key=12169393-c73621fb8fde92ee029635ac1&q=\(search)&image_type=photo&pretty=true&page=\(page)&per_page=\(per_page)")
         
         DispatchQueue.global().async {
@@ -105,37 +82,23 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
                     } catch {
                         print("pixelBay load error",error.localizedDescription)
                     }
-                    print(self.imageInfoArray.count, "=imageInfoArray.count")
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()
                         //self.reload(collectionView: self.collectionView)
                         self.activityIndicator!.stopAnimating()
+                        self.searchBar.placeholder = "Найдено всего \(self.pixelBay!.totalHits) фото"
                     }
                 }
                 }.resume()
         }
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-    // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         return imageInfoArray.count
     }
 
@@ -144,11 +107,8 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
     
         let url = URL(string: imageInfoArray[indexPath.row].previewURL)
         cell.image.downloadedFrom(url: url!, contentMode: .scaleAspectFill)
-        
-        // Configure the cell
         return cell
     }
-    
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath.row)
@@ -161,29 +121,16 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
         
     }
     
-//        func reload(collectionView: UICollectionView) {
-//    
-//            let contentOffset = collectionView.contentOffset
-//            collectionView.reloadData()
-//            collectionView.layoutIfNeeded()
-//            collectionView.setContentOffset(contentOffset, animated: false)
-//    
-//        }
-    
     //подготовка данных для пересылки во вьюконтроллер
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "detailView" {
             let controller = segue.destination as! DetailViewController
             controller.webformatURL = sender as! String
-            //controller.detailImage.downloadedFrom(url: sender as! URL)
         }
     }
     
     override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        
-        print("searchText= \(search)")
-        
         if indexPath.row == imageInfoArray.count - 6 {
             if (self.pixelBay!.totalHits / (page * per_page))  >= 1 {
                 page += 1
@@ -191,40 +138,6 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
             }
         }
     }
-    
-    
-
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
-    }
-    */
-
 }
 
 
@@ -252,28 +165,6 @@ extension CollectionViewController : UICollectionViewDelegateFlowLayout {
         return sectionInsets.left
     }
 }
-
-
-//
-//extension CollectionViewController: UICollectionViewDelegateFlowLayout {
-//    func collectionView(_ collectionView: UICollectionView,
-//                        layout collectionViewLayout: UICollectionViewLayout,
-//                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: (view.bounds.width - 34) / 3, height: (view.bounds.width-34) / 3)
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView,
-//                        layout collectionViewLayout: UICollectionViewLayout,
-//                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return 5.0
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout
-//        collectionViewLayout: UICollectionViewLayout,
-//                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return 7.0
-//    }
-//}
 
 
 extension UIImageView {
