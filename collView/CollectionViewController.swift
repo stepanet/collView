@@ -41,6 +41,7 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
         let searchBar = UISearchBar()
         searchBar.placeholder = "введите текст"
         searchBar.enablesReturnKeyAutomatically = true
+        searchBar.keyboardType = .asciiCapableNumberPad
         searchBar.delegate = self
         return searchBar
         
@@ -95,7 +96,7 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
         let url = URL(string: "https://pixabay.com/api/?key=12169393-c73621fb8fde92ee029635ac1&q=\(search)&image_type=photo&pretty=true&page=\(page)&per_page=\(per_page)")
         
         DispatchQueue.global().async {
-            URLSession.shared.dataTask(with: url!) { (data, response, error) in
+           URLSession.shared.dataTask(with: url!) { (data, response, error) in
                 if error == nil {
                     do {
                         self.pixelBay = try JSONDecoder().decode(PixabayJson.self, from: data!)
