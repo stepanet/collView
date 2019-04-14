@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         return page
     }()
     var per_page: Int  = { //кол-во фото на странице
-        var per_page = 30
+        var per_page = 20
         return per_page
     }()
 
@@ -63,16 +63,31 @@ class ViewController: UIViewController {
                     }
                     print(self.imageInfoArray.count, "=imageInfoArray.count")
                     DispatchQueue.main.async {
-                        self.collectionView.reloadData()
+                        //self.collectionView.reloadData()
+                        self.reload(collectionView: self.collectionView)
                         self.activityIndicator!.stopAnimating()
                     }
                 }
             }.resume()
         }
     }
+    
+    func reload(collectionView: UICollectionView) {
+        
+        let contentOffset = collectionView.contentOffset
+        collectionView.reloadData()
+        collectionView.layoutIfNeeded()
+        collectionView.setContentOffset(contentOffset, animated: false)
+        
+    }
 }
 
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return imageInfoArray.count
@@ -81,16 +96,18 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         let url = URL(string: imageInfoArray[indexPath.row].previewURL)
-        cell.image.downloadedFrom(url: url!, contentMode: .scaleAspectFill)
+        //cell.image.downloadedFrom(url: url!, contentMode: .scaleAspectFill)
         return cell
     }
     
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        print(imageInfoArray[indexPath.row].webformatURL)
+        
+        print(indexPath.row)
+        
         
         let sender: String = imageInfoArray[indexPath.row].webformatURL
-        performSegue(withIdentifier: "detailView", sender: sender)
+        //performSegue(withIdentifier: "detailView", sender: sender)
     }
     
     //подготовка данных для пересылки во вьюконтроллер
@@ -105,35 +122,35 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
-                if indexPath.row == imageInfoArray.count - 3 {
+                if indexPath.row == imageInfoArray.count - 6 {
                     if (self.pixelBay!.totalHits / (page * per_page))  >= 1 {
                         page += 1
-                        self.pixelLoadJson(page: page, per_page: per_page)
+                        //self.pixelLoadJson(page: page, per_page: per_page)
                     }
                 }
     }
     
 }
 
-extension ViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (view.bounds.width - 34) / 3, height: (view.bounds.width-34) / 3)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 5.0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout
-        collectionViewLayout: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 7.0
-    }
-}
+//extension ViewController: UICollectionViewDelegateFlowLayout {
+//    func collectionView(_ collectionView: UICollectionView,
+//                        layout collectionViewLayout: UICollectionViewLayout,
+//                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        return CGSize(width: (view.bounds.width - 34) / 3, height: (view.bounds.width-34) / 3)
+//    }
+
+//    func collectionView(_ collectionView: UICollectionView,
+//                        layout collectionViewLayout: UICollectionViewLayout,
+//                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return 5.0
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout
+//        collectionViewLayout: UICollectionViewLayout,
+//                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return 7.0
+//    }
+//}
 
 extension UIImageView {
     func downloadedFrom(url: URL, contentMode mode: UIView.ContentMode = .scaleToFill ) {
