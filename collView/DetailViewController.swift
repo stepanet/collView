@@ -23,8 +23,4 @@ class DetailViewController: UIViewController {
         detailImage.downloadedFrom(url: URL(string: webformatURL)!, contentMode: .scaleAspectFit)
         
     }
-
-    @IBAction func closeDetailView(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
-    }
 }

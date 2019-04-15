@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CollectionViewController: UICollectionViewController, UISearchBarDelegate {
+class CollectionViewController: UICollectionViewController, UISearchBarDelegate , UITextFieldDelegate {
 
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
@@ -40,8 +40,9 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
         let searchBar = UISearchBar()
         searchBar.placeholder = "введите текст"
         searchBar.enablesReturnKeyAutomatically = true
-        searchBar.keyboardType = .asciiCapableNumberPad
-        searchBar.delegate = self
+        searchBar.keyboardType = UIKeyboardType.alphabet
+
+        //searchBar.delegate = self
         return searchBar
     } ()
     
@@ -49,6 +50,7 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
         super.viewDidLoad()
 
         self.navigationItem.titleView = searchBar
+        searchBar.delegate = self
         
     }
     
@@ -61,6 +63,15 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
         search = searchText
         imageInfoArray.removeAll()
         pixelLoadJson(page: page, per_page: per_page, search: search)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        print(#function)
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -87,6 +98,9 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
                         //self.reload(collectionView: self.collectionView)
                         self.activityIndicator!.stopAnimating()
                         self.searchBar.placeholder = "Найдено всего \(self.pixelBay!.totalHits) фото"
+                        if search == "" {
+                            self.searchBar.resignFirstResponder()
+                        }
                     }
                 }
                 }.resume()
@@ -131,7 +145,7 @@ class CollectionViewController: UICollectionViewController, UISearchBarDelegate 
     }
     
     override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == imageInfoArray.count - 6 {
+        if indexPath.row == imageInfoArray.count - 1 {
             if (self.pixelBay!.totalHits / (page * per_page))  >= 1 {
                 page += 1
                 self.pixelLoadJson(page: page, per_page: per_page, search: search)

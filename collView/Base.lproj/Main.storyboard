@@ -84,13 +84,6 @@
                                     <constraint firstAttribute="width" secondItem="cze-Ro-Jnj" secondAttribute="height" multiplier="23:15" id="oXQ-dq-q9G"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h4P-EH-mNx">
-                                <rect key="frame" x="125.5" y="277" width="69" height="34"/>
-                                <state key="normal" title="закрыть"/>
-                                <connections>
-                                    <action selector="closeDetailView:" destination="mB2-XQ-qBY" eventType="touchUpInside" id="Da5-EY-iKt"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -98,8 +91,6 @@
                             <constraint firstItem="cze-Ro-Jnj" firstAttribute="centerY" secondItem="IdU-hA-WGB" secondAttribute="centerY" id="G1D-Hq-Bzm"/>
                             <constraint firstItem="cze-Ro-Jnj" firstAttribute="centerX" secondItem="IdU-hA-WGB" secondAttribute="centerX" id="I9e-Wf-8HT"/>
                             <constraint firstItem="IdU-hA-WGB" firstAttribute="trailing" secondItem="cze-Ro-Jnj" secondAttribute="trailing" constant="8" id="ISm-Qa-IkS"/>
-                            <constraint firstItem="h4P-EH-mNx" firstAttribute="centerX" secondItem="cze-Ro-Jnj" secondAttribute="centerX" id="c31-fz-iNX"/>
-                            <constraint firstItem="h4P-EH-mNx" firstAttribute="centerY" secondItem="cze-Ro-Jnj" secondAttribute="centerY" id="nIB-iz-cZV"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="IdU-hA-WGB"/>
                     </view>
